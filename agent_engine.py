@@ -331,3 +331,25 @@ class GitHubAgent:
                 print("Error checking for updates.")
         except Exception as e:
             print(f"Error checking for updates: {str(e)}")
+
+    # Improvement: Added a method to check for updates and restart the agent if an update is available
+    def check_for_updates_and_restart(self):
+        try:
+            import requests
+            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
+            if response.status_code == 200:
+                latest_release = response.json()
+                current_version = "1.0"  # Replace with your current version
+                if latest_release["tag_name"] != current_version:
+                    print("Update available. Downloading latest release...")
+                    # Download and install the latest release
+                    self.improved_self_improve_with_validation(latest_release["zipball_url"], 'main.py')
+                    print("Update installed. Restarting the agent...")
+                    import os
+                    os.execl(sys.executable, sys.executable, *sys.argv)
+                else:
+                    print("Agent is up-to-date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
