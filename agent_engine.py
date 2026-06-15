@@ -201,3 +201,24 @@ class GitHubAgent:
                     print(f"Output: {res['stdout']}")
         
         logging.info('Git commands executed with retry mechanism')
+
+        # Added a new feature to improve the self-improvement process by checking for updates before restarting
+        def check_for_updates():
+            try:
+                update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
+                headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"}
+                response = requests.get(update_url, headers=headers, timeout=5)
+                if response.status_code == 200:
+                    update_data = response.json()
+                    if update_data.get('sha') != self.get_current_sha():
+                        print("Update available from remote repository.")
+                        return True
+                return False
+            except Exception as e:
+                print(f"Error checking for updates: {str(e)}")
+                return False
+
+        if check_for_updates():
+            print("Update available, restarting agent to apply changes...")
+            importlib.reload(sys.modules[__name__])
+            os.execl(sys.executable, sys.executable, *sys.argv)
