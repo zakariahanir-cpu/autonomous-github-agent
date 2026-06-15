@@ -303,3 +303,12 @@ class GitHubAgent:
         else:
             print("Invalid response from the AI provider.")
             return None
+
+    def improved_query_with_rate_limit_protection(self, prompt):
+        response = self.improved_query(prompt)
+        if response and 'rate limit' in str(response).lower():
+            print("Rate limit exceeded. Waiting for 1 hour before retrying...")
+            import time
+            time.sleep(3600)
+            return self.improved_query(prompt)
+        return response
