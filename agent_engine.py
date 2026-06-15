@@ -220,3 +220,50 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error in improved query: {str(e)}")
             return None
+
+    def improved_self_improve(self, new_code, file_path='main.py'):
+        self.write_file(file_path, new_code)
+
+        commands = [
+            'git config --global user.name "GitHub Agent"',
+            'git config --global user.email "agent@github.com"',
+            f'git add {file_path}',
+            'git commit -m "Self-improvement: Agent updated its own code via Groq LLM"',
+            'git push'
+        ]
+
+        for cmd in commands:
+            res = self.execute_command(cmd)
+            if res.get('returncode') != 0:
+                print(f"Command failed: {cmd}\nError: {res.get('stderr') or res.get('error')}")
+            else:
+                print(f"Command executed successfully: {cmd}")
+                if 'stdout' in res:
+                    print(f"Output: {res['stdout']}")
+
+        try:
+            importlib.reload(sys.modules[__name__])
+        except Exception as e:
+            print(f"Error reloading agent's code: {str(e)}")
+        
+        try:
+            import os
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        except Exception as e:
+            print(f"Error restarting agent: {str(e)}")
+
+        # Added a check to ensure the agent is still functioning after self-improvement
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            if memory_usage > 100 or cpu_usage > 90:
+                print("Agent is experiencing high resource usage after self-improvement. Restarting the agent to prevent crashes.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                print("Agent is functioning within acceptable resource limits after self-improvement.")
+        except Exception as e:
+            print(f"Error checking agent status after self-improvement: {str(e)}")
