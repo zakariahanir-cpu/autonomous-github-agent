@@ -133,7 +133,7 @@ class GitHubAgent:
         try:
             update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
             # أضفنا الـ headers لتفادي حظر API من GitHub بدون طلب مصادق
-            headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"} 
+            headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"}
             response = requests.get(update_url, headers=headers, timeout=5)
             if response.status_code == 200:
                 update_data = response.json()
