@@ -170,3 +170,12 @@ class GitHubAgent:
                 os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Error restarting agent due to external update: {str(e)}")
+
+        # Added a new feature to improve error handling and provide more informative error messages
+        try:
+            if should_restart_for_update:
+                print("Agent will restart to apply the latest updates from the remote repository.")
+            else:
+                print("Agent has completed the self-improvement process and will continue running with the updated code.")
+        except Exception as e:
+            print(f"Error providing informative error message: {str(e)}")
