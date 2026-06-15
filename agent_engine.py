@@ -92,6 +92,22 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error restarting agent: {str(e)}")
 
+        # Added a check to ensure the agent is still functioning after self-improvement
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            if memory_usage > 100 or cpu_usage > 90:
+                print("Agent is experiencing high resource usage after self-improvement. Restarting the agent to prevent crashes.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                print("Agent is functioning within acceptable resource limits after self-improvement.")
+        except Exception as e:
+            print(f"Error checking agent status after self-improvement: {str(e)}")
+
     def error_handling(self):
         try:
             import logging
