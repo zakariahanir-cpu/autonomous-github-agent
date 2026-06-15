@@ -5,6 +5,7 @@ import subprocess
 import sys
 import importlib
 import time
+import logging
 
 class GitHubAgent:
     def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
@@ -23,7 +24,7 @@ class GitHubAgent:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
-            "temperature": 0.2 # تقليل العشوائية لضمان الالتزام بالتنسيق
+            "temperature": 0.2 
         }
         try:
             response = requests.post(self.endpoint, headers=headers, json=data)
@@ -95,7 +96,7 @@ class GitHubAgent:
 
         # Added a check to verify if the self-improvement was successful
         try:
-            time.sleep(5)  # wait for 5 seconds to allow the changes to take effect
+            time.sleep(5)  
             import requests
             response = requests.get('https://api.github.com')
             if response.status_code == 200:
@@ -135,7 +136,6 @@ class GitHubAgent:
 
         # Added a new feature to log the self-improvement process
         try:
-            import logging
             logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
             logging.info('Self-improvement process started')
             logging.info('New code written to file')
@@ -145,3 +145,9 @@ class GitHubAgent:
             logging.info('Self-improvement process completed')
         except Exception as e:
             print(f"Error logging self-improvement process: {str(e)}")
+
+        # Added error handling for the logging feature
+        try:
+            logging.info('Self-improvement process completed successfully')
+        except Exception as e:
+            print(f"Error logging self-improvement completion: {str(e)}")
