@@ -367,3 +367,24 @@ class GitHubAgent:
             print("Latest release installed successfully.")
         except Exception as e:
             print(f"Error installing latest release: {str(e)}")
+
+    def improved_validate_agent_status(self):
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            if memory_usage > 100 or cpu_usage > 90:
+                print("Agent is experiencing high resource usage. Restarting the agent to prevent crashes.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                print("Agent is functioning within acceptable resource limits.")
+            return {
+                "memory_usage": memory_usage,
+                "cpu_usage": cpu_usage
+            }
+        except Exception as e:
+            print(f"Error validating agent status: {str(e)}")
+            return None
