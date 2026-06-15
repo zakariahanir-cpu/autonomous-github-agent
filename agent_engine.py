@@ -312,3 +312,22 @@ class GitHubAgent:
             time.sleep(3600)
             return self.improved_query(prompt)
         return response
+
+    # Added a new method to handle agent updates
+    def update_agent(self):
+        try:
+            import requests
+            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
+            if response.status_code == 200:
+                latest_release = response.json()
+                current_version = "1.0"  # Replace with your current version
+                if latest_release["tag_name"] != current_version:
+                    print("Update available. Downloading latest release...")
+                    # Download and install the latest release
+                    self.improved_self_improve_with_validation(latest_release["zipball_url"], 'main.py')
+                else:
+                    print("Agent is up-to-date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
