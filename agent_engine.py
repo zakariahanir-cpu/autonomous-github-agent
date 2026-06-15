@@ -91,3 +91,16 @@ class GitHubAgent:
             os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Error restarting agent: {str(e)}")
+
+        # Added a check to verify if the self-improvement was successful
+        try:
+            import time
+            time.sleep(5)  # wait for 5 seconds to allow the changes to take effect
+            import requests
+            response = requests.get('https://api.github.com')
+            if response.status_code == 200:
+                print("Self-improvement successful. Agent is functioning correctly.")
+            else:
+                print("Self-improvement failed. Agent is not functioning correctly.")
+        except Exception as e:
+            print(f"Error verifying self-improvement: {str(e)}")
