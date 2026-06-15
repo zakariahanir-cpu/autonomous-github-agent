@@ -92,115 +92,12 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error restarting agent: {str(e)}")
 
+    def error_handling(self):
         try:
-            time.sleep(5)  
-            import requests
-            response = requests.get('https://api.github.com')
-            if response.status_code == 200:
-                print("Self-improvement successful. Agent is functioning correctly.")
-            else:
-                print("Self-improvement failed. Agent is not functioning correctly.")
+            import logging
+            logging.basicConfig(filename='error.log', level=logging.ERROR)
         except Exception as e:
-            print(f"Error verifying self-improvement: {str(e)}")
-
-    def get_latest_commit(self):
-        try:
-            import subprocess
-            latest_commit = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
-            if latest_commit.returncode == 0:
-                return latest_commit.stdout.strip()
-            else:
-                return None
-        except Exception as e:
-            print(f"Error getting latest commit: {str(e)}")
-            return None
-
-    def handle_error(self, error):
-        try:
-            logging.error(f"Error during self-improvement: {str(error)}")
-            print(f"Error during self-improvement: {str(error)}")
-        except Exception as e:
-            print(f"Error handling error: {str(e)}")
-
-    def verify_config(self):
-        try:
-            import os
-            if not os.getenv('LLM_API_KEY'):
-                print("Error: LLM_API_KEY not found. Please add it to GitHub Secrets.")
-                return False
-            return True
-        except Exception as e:
-            print(f"Error verifying config: {str(e)}")
-            return False
-
-    def improve_performance(self):
-        try:
-            import os
-            import psutil
-            process = psutil.Process(os.getpid())
-            memory_usage = process.memory_info().rss / (1024 * 1024)
-            if memory_usage > 100:
-                print("Memory usage is high. Restarting the agent to free up memory.")
-                import os
-                os.execl(sys.executable, sys.executable, *sys.argv)
-            else:
-                print("Memory usage is within acceptable limits.")
-        except Exception as e:
-            print(f"Error improving performance: {str(e)}")
-
-    def check_for_updates(self):
-        try:
-            import requests
-            update_url = "https://api.github.com/repos/your-repo/your-repo/commits"
-            response = requests.get(update_url)
-            if response.status_code == 200:
-                commits = response.json()
-                latest_commit = commits[0]
-                if latest_commit['sha'] != self.get_latest_commit():
-                    print("New update available. Restarting the agent.")
-                    import os
-                    os.execl(sys.executable, sys.executable, *sys.argv)
-                else:
-                    print("Agent is up to date.")
-            else:
-                print("Error checking for updates.")
-        except Exception as e:
-            print(f"Error checking for updates: {str(e)}")
-
-    def query_with_timeout(self, prompt, timeout=10):
-        import signal
-        def timeout_handler(signum, frame):
-            raise TimeoutError()
-        signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(timeout)
-        try:
-            return self.query(prompt)
-        except TimeoutError:
-            print("Timeout error: Query took too long to respond.")
-            return None
-        finally:
-            signal.alarm(0)
-
-    def query_with_retry(self, prompt, max_retries=3, retry_delay=1):
-        for attempt in range(max_retries):
-            try:
-                return self.query(prompt)
-            except Exception as e:
-                print(f"Error during query attempt {attempt+1}: {str(e)}")
-                time.sleep(retry_delay)
-        print("All query attempts failed. Giving up.")
-        return None
-
-    def log_self_improvement(self):
-        try:
-            logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
-            logging.info('Self-improvement process started')
-            logging.info('New code written to file')
-            logging.info('Git commands executed')
-            logging.info('Agent restarted')
-            logging.info('Self-improvement process completed')
-        except Exception as e:
-            print(f"Error logging self-improvement process: {str(e)}")
+            print(f"Error setting up error handling: {str(e)}")
 
     def validate_api_key(self):
         try:
@@ -212,13 +109,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating API key: {str(e)}")
             return False
-
-    def error_handling(self):
-        try:
-            import logging
-            logging.basicConfig(filename='error.log', level=logging.ERROR)
-        except Exception as e:
-            print(f"Error setting up error handling: {str(e)}")
 
     def validate_response(self, response):
         if response is None:
@@ -242,10 +132,3 @@ class GitHubAgent:
                 print("Agent is functioning within acceptable resource limits.")
         except Exception as e:
             print(f"Error validating agent status: {str(e)}")
-
-    def remove_unused_functions(self):
-        # Remove unused functions to improve performance
-        unused_functions = ['get_latest_commit', 'handle_error', 'verify_config', 'improve_performance', 'check_for_updates', 'query_with_timeout', 'query_with_retry', 'log_self_improvement', 'validate_api_key', 'error_handling', 'validate_response', 'validate_agent_status']
-        for func in unused_functions:
-            if hasattr(self, func):
-                delattr(self, func)
