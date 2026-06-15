@@ -121,8 +121,8 @@ class GitHubAgent:
         # Added a new feature to send a notification after self-improvement
         try:
             import requests
-            notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/api/notifications
-            "
+            # تم إصلاح الرابط وجعله في سطر واحد مستقيم
+            notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/api/notifications"
             notification_data = {
                 "event": "self-improvement",
                 "status": "success"
@@ -152,3 +152,4 @@ class GitHubAgent:
             logging.info('Self-improvement process completed successfully')
         except Exception as e:
             print(f"Error logging self-improvement completion: {str(e)}")
+                
