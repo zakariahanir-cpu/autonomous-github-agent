@@ -80,21 +80,17 @@ class GitHubAgent:
                 if 'stdout' in res:
                     print(f"Output: {res['stdout']}")
 
-        # Add a try-except block to handle potential exceptions during the self-improvement process
         try:
-            # Reload the agent's code after self-improvement
             importlib.reload(sys.modules[__name__])
         except Exception as e:
             print(f"Error reloading agent's code: {str(e)}")
         
-        # Added a check to restart the agent after self-improvement
         try:
             import os
             os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Error restarting agent: {str(e)}")
 
-        # Added a check to verify if the self-improvement was successful
         try:
             time.sleep(5)  
             import requests
@@ -106,7 +102,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error verifying self-improvement: {str(e)}")
 
-        # Added a check to handle the case where the agent is not able to restart itself
         try:
             import sys
             if sys.argv[0] == 'main.py':
@@ -118,7 +113,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error handling agent restart: {str(e)}")
 
-        # Added a new feature to send a notification after self-improvement
         try:
             import requests
             notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/api/notifications"
@@ -134,7 +128,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error sending notification: {str(e)}")
 
-        # Added a new feature to log the self-improvement process
         try:
             logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
             logging.info('Self-improvement process started')
@@ -146,13 +139,11 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error logging self-improvement process: {str(e)}")
 
-        # Added error handling for the logging feature
         try:
             logging.info('Self-improvement process completed successfully')
         except Exception as e:
             print(f"Error logging self-improvement completion: {str(e)}")
 
-        # Added a check to verify the git status after self-improvement
         try:
             import subprocess
             git_status = subprocess.run(['git', 'status'], capture_output=True, text=True)
@@ -163,7 +154,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error checking git status: {str(e)}")
 
-        # Added a new feature to check for updates and restart the agent if necessary
         try:
             import requests
             update_url = "https://api.github.com/repos/your-repo/your-repo/commits"
@@ -194,7 +184,6 @@ class GitHubAgent:
             print(f"Error getting latest commit: {str(e)}")
             return None
 
-    # Added a new method to handle errors during the self-improvement process
     def handle_error(self, error):
         try:
             logging.error(f"Error during self-improvement: {str(error)}")
@@ -202,7 +191,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error handling error: {str(e)}")
 
-    # Added a new method to verify the agent's configuration
     def verify_config(self):
         try:
             import os
@@ -214,7 +202,6 @@ class GitHubAgent:
             print(f"Error verifying config: {str(e)}")
             return False
 
-    # Added a new method to improve the agent's performance
     def improve_performance(self):
         try:
             import os
@@ -230,7 +217,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error improving performance: {str(e)}")
 
-    # Added a new method to check for updates and restart the agent if necessary
     def check_for_updates(self):
         try:
             import requests
@@ -250,7 +236,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error checking for updates: {str(e)}")
 
-    # Added a new method to add a timeout for the query method
     def query_with_timeout(self, prompt, timeout=10):
         import signal
         def timeout_handler(signum, frame):
@@ -265,7 +250,6 @@ class GitHubAgent:
         finally:
             signal.alarm(0)
 
-    # Added a new method to implement a retry mechanism for the query method
     def query_with_retry(self, prompt, max_retries=3, retry_delay=1):
         for attempt in range(max_retries):
             try:
