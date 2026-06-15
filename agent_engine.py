@@ -30,7 +30,8 @@ class GitHubAgent:
         try:
             response = requests.post(self.endpoint, headers=headers, json=data, timeout=10)
             if response.status_code != 200:
-                return f"Error: {response.status_code} {response.reason} - {response.text}"
+                error_details = response.json() if response.headers.get('Content-Type') == 'application/json' else response.text
+                return f"Error: {response.status_code} {response.reason} - {error_details}"
             return response.json()['choices'][0]['message']['content']
         except Exception as e:
             return f"Error: {str(e)}"
@@ -301,74 +302,5 @@ class GitHubAgent:
         if self.validate_response(response):
             return response
         else:
-            print("Invalid response from the AI provider.")
+            print(f"Invalid response from the AI provider: {response}")
             return None
-
-    def improved_query_with_rate_limit_protection(self, prompt):
-        response = self.improved_query(prompt)
-        if response and 'rate limit' in str(response).lower():
-            print("Rate limit exceeded. Waiting for 1 hour before retrying...")
-            import time
-            time.sleep(3600)
-            return self.improved_query(prompt)
-        return response
-
-    # Added a new method to handle agent updates
-    def update_agent(self):
-        try:
-            import requests
-            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
-            if response.status_code == 200:
-                latest_release = response.json()
-                current_version = "1.0"  # Replace with your current version
-                if latest_release["tag_name"] != current_version:
-                    print("Update available. Downloading latest release...")
-                    # Download and install the latest release
-                    self.improved_self_improve_with_validation(latest_release["zipball_url"], 'main.py')
-                else:
-                    print("Agent is up-to-date.")
-            else:
-                print("Error checking for updates.")
-        except Exception as e:
-            print(f"Error checking for updates: {str(e)}")
-
-    # Improvement: Added a method to check for updates and restart the agent if an update is available
-    def check_for_updates_and_restart(self):
-        try:
-            import requests
-            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
-            if response.status_code == 200:
-                latest_release = response.json()
-                current_version = "1.0"  # Replace with your current version
-                if latest_release["tag_name"] != current_version:
-                    print("Update available. Downloading latest release...")
-                    # Download and install the latest release
-                    self.improved_self_improve_with_validation(latest_release["zipball_url"], 'main.py')
-                    print("Update installed. Restarting the agent...")
-                    import os
-                    os.execl(sys.executable, sys.executable, *sys.argv)
-                else:
-                    print("Agent is up-to-date.")
-            else:
-                print("Error checking for updates.")
-        except Exception as e:
-            print(f"Error checking for updates: {str(e)}")
-
-    # Improvement: Added a method to validate the agent's status before making a query
-    def validate_agent_status_before_query(self, prompt):
-        agent_status = self.get_agent_status()
-        if agent_status and agent_status["memory_usage"] > 100 or agent_status["cpu_usage"] > 90:
-            print("Agent is experiencing high resource usage. Restarting the agent to prevent crashes.")
-            import os
-            os.execl(sys.executable, sys.executable, *sys.argv)
-        else:
-            return self.improved_query_with_validation(prompt)
-
-    # Improvement: Added a method to handle rate limit errors
-    def handle_rate_limit_error(self, response):
-        if 'rate limit' in str(response).lower():
-            print("Rate limit exceeded. Waiting for 1 hour before retrying...")
-            import time
-            time.sleep(3600)
-            return self.improved_query_with_validation(response)
-        return response
