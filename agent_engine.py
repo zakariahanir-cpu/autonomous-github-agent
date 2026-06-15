@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import subprocess
+import sys
 
 class GitHubAgent:
     def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
@@ -83,3 +84,10 @@ class GitHubAgent:
             importlib.reload(sys.modules[__name__])
         except Exception as e:
             print(f"Error reloading agent's code: {str(e)}")
+        
+        # Added a check to restart the agent after self-improvement
+        try:
+            import os
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        except Exception as e:
+            print(f"Error restarting agent: {str(e)}")
