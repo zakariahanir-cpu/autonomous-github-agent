@@ -199,4 +199,13 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error getting agent status: {str(e)}")
             return None
-        
+
+    def rate_limit_protection(self):
+        import time
+        while True:
+            response = self.query("Test query to check rate limit")
+            if 'rate limit' in str(response).lower():
+                print("Rate limit exceeded. Waiting for 1 hour before retrying...")
+                time.sleep(3600)
+            else:
+                break
