@@ -149,3 +149,11 @@ class GitHubAgent:
                 print("Error checking for updates.")
         except Exception as e:
             print(f"Error checking for updates: {str(e)}")
+
+    def handle_rate_limit(self, response):
+        if 'rate limit' in str(response).lower():
+            print("Rate limit exceeded. Waiting for 1 hour before retrying...")
+            import time
+            time.sleep(3600)
+            return self.query(response)
+        return response
