@@ -193,3 +193,23 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error getting latest commit: {str(e)}")
             return None
+
+    # Added a new method to handle errors during the self-improvement process
+    def handle_error(self, error):
+        try:
+            logging.error(f"Error during self-improvement: {str(error)}")
+            print(f"Error during self-improvement: {str(error)}")
+        except Exception as e:
+            print(f"Error handling error: {str(e)}")
+
+    # Added a new method to verify the agent's configuration
+    def verify_config(self):
+        try:
+            import os
+            if not os.getenv('LLM_API_KEY'):
+                print("Error: LLM_API_KEY not found. Please add it to GitHub Secrets.")
+                return False
+            return True
+        except Exception as e:
+            print(f"Error verifying config: {str(e)}")
+            return False
