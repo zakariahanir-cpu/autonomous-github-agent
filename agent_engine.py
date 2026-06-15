@@ -181,3 +181,6 @@ class GitHubAgent:
             time.sleep(delay)
             delay *= 2
         return None
+
+    def query_with_exponential_backoff(self, prompt):
+        return self.exponential_backoff(prompt)
