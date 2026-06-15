@@ -71,4 +71,7 @@ class GitHubAgent:
             res = self.execute_command(cmd)
             if res.get('returncode') != 0:
                 print(f"Command failed: {cmd}\nError: {res.get('stderr') or res.get('error')}")
-              
+            else:
+                print(f"Command executed successfully: {cmd}")
+                if 'stdout' in res:
+                    print(f"Output: {res['stdout']}")
