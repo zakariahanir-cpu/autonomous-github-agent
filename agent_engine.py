@@ -211,3 +211,17 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating API key: {str(e)}")
             return False
+
+    def error_handling(self):
+        try:
+            import logging
+            logging.basicConfig(filename='error.log', level=logging.ERROR)
+        except Exception as e:
+            print(f"Error setting up error handling: {str(e)}")
+
+# Added error handling to the GitHubAgent class
+    def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
+        self.api_key = api_key
+        self.model = model
+        self.endpoint = endpoint or "https://api.groq.com/openai/v1/chat/completions"
+        self.error_handling()
