@@ -200,3 +200,14 @@ class GitHubAgent:
             logging.info('Self-improvement process completed')
         except Exception as e:
             print(f"Error logging self-improvement process: {str(e)}")
+
+    def validate_api_key(self):
+        try:
+            response = requests.get(f"https://api.groq.com/openai/v1/chat/completions", headers={"Authorization": f"Bearer {self.api_key}"})
+            if response.status_code == 200:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error validating API key: {str(e)}")
+            return False
