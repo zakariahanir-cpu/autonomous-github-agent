@@ -249,3 +249,18 @@ class GitHubAgent:
                 print("Error checking for updates.")
         except Exception as e:
             print(f"Error checking for updates: {str(e)}")
+
+    # Added a new method to add a timeout for the query method
+    def query_with_timeout(self, prompt, timeout=10):
+        import signal
+        def timeout_handler(signum, frame):
+            raise TimeoutError()
+        signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(timeout)
+        try:
+            return self.query(prompt)
+        except TimeoutError:
+            print("Timeout error: Query took too long to respond.")
+            return None
+        finally:
+            signal.alarm(0)
