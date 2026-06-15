@@ -12,6 +12,7 @@ class GitHubAgent:
         self.api_key = api_key
         self.model = model
         self.endpoint = endpoint or "https://api.groq.com/openai/v1/chat/completions"
+        self.error_handling()
 
     def query(self, prompt, system_prompt="You are an autonomous self-improving GitHub Agent."):
         headers = {
@@ -27,7 +28,7 @@ class GitHubAgent:
             "temperature": 0.2 
         }
         try:
-            response = requests.post(self.endpoint, headers=headers, json=data)
+            response = requests.post(self.endpoint, headers=headers, json=data, timeout=10)
             if response.status_code != 200:
                 return f"Error: {response.status_code} {response.reason} - {response.text}"
             return response.json()['choices'][0]['message']['content']
@@ -218,10 +219,3 @@ class GitHubAgent:
             logging.basicConfig(filename='error.log', level=logging.ERROR)
         except Exception as e:
             print(f"Error setting up error handling: {str(e)}")
-
-# Added error handling to the GitHubAgent class
-    def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
-        self.api_key = api_key
-        self.model = model
-        self.endpoint = endpoint or "https://api.groq.com/openai/v1/chat/completions"
-        self.error_handling()
