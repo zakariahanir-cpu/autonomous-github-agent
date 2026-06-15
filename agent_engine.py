@@ -133,7 +133,7 @@ class GitHubAgent:
         try:
             update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
             # أضفنا الـ headers لتفادي حظر API من GitHub بدون طلب مصادق
-            headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"}
+            headers = {"User-Agent": "GitHub-Agent"} 
             response = requests.get(update_url, headers=headers, timeout=5)
             if response.status_code == 200:
                 update_data = response.json()
@@ -161,64 +161,4 @@ class GitHubAgent:
             os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Critical Error restarting agent: {str(e)}")
-
-        # Added a new feature to handle exceptions and provide more informative error messages
-        def handle_exceptions(func):
-            def wrapper(*args, **kwargs):
-                try:
-                    return func(*args, **kwargs)
-                except Exception as e:
-                    print(f"An error occurred: {str(e)}")
-                    logging.error(f"Error in {func.__name__}: {str(e)}")
-            return wrapper
-
-        @handle_exceptions
-        def execute_command_with_retry(command, max_retries=3):
-            for attempt in range(max_retries):
-                result = self.execute_command(command)
-                if result.get('returncode') == 0:
-                    return result
-                print(f"Command failed (attempt {attempt+1}/{max_retries}). Retrying...")
-            print(f"Command failed after {max_retries} attempts.")
-            return {"error": "Command failed after retries"}
-
-        # Replace the original execute_command call with the new execute_command_with_retry
-        commands = [
-            'git config --global user.name "GitHub Agent"',
-            'git config --global user.email "agent@github.com"',
-            f'git add {file_path}',
-            'git commit -m "Self-improvement: Agent updated its own code via Groq LLM"',
-            'git push'
-        ]
-
-        for cmd in commands:
-            res = execute_command_with_retry(cmd)
-            if res.get('returncode') != 0:
-                print(f"Command failed: {cmd}\nError: {res.get('stderr') or res.get('error')}")
-            else:
-                print(f"Command executed successfully: {cmd}")
-                if 'stdout' in res:
-                    print(f"Output: {res['stdout']}")
-        
-        logging.info('Git commands executed with retry mechanism')
-
-        # Added a new feature to improve the self-improvement process by checking for updates before restarting
-        def check_for_updates():
-            try:
-                update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
-                headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"}
-                response = requests.get(update_url, headers=headers, timeout=5)
-                if response.status_code == 200:
-                    update_data = response.json()
-                    if update_data.get('sha') != self.get_current_sha():
-                        print("Update available from remote repository.")
-                        return True
-                return False
-            except Exception as e:
-                print(f"Error checking for updates: {str(e)}")
-                return False
-
-        if check_for_updates():
-            print("Update available, restarting agent to apply changes...")
-            importlib.reload(sys.modules[__name__])
-            os.execl(sys.executable, sys.executable, *sys.argv)
+            
