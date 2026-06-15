@@ -363,3 +363,12 @@ class GitHubAgent:
             os.execl(sys.executable, sys.executable, *sys.argv)
         else:
             return self.improved_query_with_validation(prompt)
+
+    # Improvement: Added a method to handle rate limit errors
+    def handle_rate_limit_error(self, response):
+        if 'rate limit' in str(response).lower():
+            print("Rate limit exceeded. Waiting for 1 hour before retrying...")
+            import time
+            time.sleep(3600)
+            return self.improved_query_with_validation(response)
+        return response
