@@ -167,3 +167,14 @@ class GitHubAgent:
             retries += 1
             print(f"Query failed. Retrying... ({retries}/{max_retries})")
         return None
+
+    def exponential_backoff(self, prompt, max_retries=5, initial_delay=1):
+        delay = initial_delay
+        for _ in range(max_retries):
+            response = self.query(prompt)
+            if self.validate_response(response):
+                return response
+            print(f"Query failed. Retrying in {delay} seconds...")
+            time.sleep(delay)
+            delay *= 2
+        return None
