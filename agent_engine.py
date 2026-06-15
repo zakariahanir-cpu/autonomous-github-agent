@@ -121,7 +121,6 @@ class GitHubAgent:
         # Added a new feature to send a notification after self-improvement
         try:
             import requests
-            # تم إصلاح الرابط وجعله في سطر واحد مستقيم
             notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/api/notifications"
             notification_data = {
                 "event": "self-improvement",
@@ -152,4 +151,30 @@ class GitHubAgent:
             logging.info('Self-improvement process completed successfully')
         except Exception as e:
             print(f"Error logging self-improvement completion: {str(e)}")
-                
+
+        # Added a new feature to check for updates and restart the agent if necessary
+        try:
+            import requests
+            update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
+            response = requests.get(update_url)
+            if response.status_code == 200:
+                update_data = response.json()
+                if update_data['sha'] != self.get_current_sha():
+                    print("Update available. Restarting agent.")
+                    import os
+                    os.execl(sys.executable, sys.executable, *sys.argv)
+                else:
+                    print("No update available.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
+
+    def get_current_sha(self):
+        try:
+            import subprocess
+            result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
+            return result.stdout.strip()
+        except Exception as e:
+            print(f"Error getting current SHA: {str(e)}")
+            return None
