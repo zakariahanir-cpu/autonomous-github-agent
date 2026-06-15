@@ -283,3 +283,15 @@ class GitHubAgent:
                 print("Agent is functioning within acceptable resource limits after self-improvement.")
         except Exception as e:
             print(f"Error checking agent status after self-improvement: {str(e)}")
+
+    def validate_file_path(self, file_path):
+        if file_path in ['main.py', 'agent_engine.py']:
+            return True
+        else:
+            return False
+
+    def improved_self_improve_with_validation(self, new_code, file_path='main.py'):
+        if self.validate_file_path(file_path):
+            self.improved_self_improve(new_code, file_path)
+        else:
+            print(f"Invalid file path: {file_path}")
