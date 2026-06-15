@@ -184,3 +184,18 @@ class GitHubAgent:
 
     def query_with_exponential_backoff(self, prompt):
         return self.exponential_backoff(prompt)
+
+    def get_agent_status(self):
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            return {
+                "memory_usage": memory_usage,
+                "cpu_usage": cpu_usage
+            }
+        except Exception as e:
+            print(f"Error getting agent status: {str(e)}")
+            return None
