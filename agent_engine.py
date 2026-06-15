@@ -116,3 +116,19 @@ class GitHubAgent:
                 os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Error handling agent restart: {str(e)}")
+
+        # Added a new feature to send a notification after self-improvement
+        try:
+            import requests
+            notification_url = "https://api.example.com/notifications"
+            notification_data = {
+                "event": "self-improvement",
+                "status": "success"
+            }
+            response = requests.post(notification_url, json=notification_data)
+            if response.status_code == 200:
+                print("Notification sent successfully.")
+            else:
+                print("Error sending notification.")
+        except Exception as e:
+            print(f"Error sending notification: {str(e)}")
