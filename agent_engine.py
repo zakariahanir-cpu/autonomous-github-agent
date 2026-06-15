@@ -304,3 +304,24 @@ class GitHubAgent:
         else:
             print(f"Invalid response from the AI provider: {response}")
             return None
+
+    def improved_error_handling(self):
+        try:
+            import logging
+            logging.basicConfig(filename='error.log', level=logging.ERROR)
+            logging.info("Error handling initialized.")
+        except Exception as e:
+            print(f"Error setting up error handling: {str(e)}")
+            logging.error(f"Error setting up error handling: {str(e)}")
+
+    def improved_validate_api_key(self):
+        try:
+            response = requests.get(f"https://api.groq.com/openai/v1/chat/completions", headers={"Authorization": f"Bearer {self.api_key}"})
+            if response.status_code == 200:
+                return True
+            else:
+                print(f"API key validation failed: {response.status_code} {response.reason}")
+                return False
+        except Exception as e:
+            print(f"Error validating API key: {str(e)}")
+            return False
