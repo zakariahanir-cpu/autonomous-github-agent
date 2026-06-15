@@ -219,3 +219,10 @@ class GitHubAgent:
             logging.basicConfig(filename='error.log', level=logging.ERROR)
         except Exception as e:
             print(f"Error setting up error handling: {str(e)}")
+
+    def validate_response(self, response):
+        if response is None:
+            return False
+        if isinstance(response, str) and response.startswith("Error:"):
+            return False
+        return True
