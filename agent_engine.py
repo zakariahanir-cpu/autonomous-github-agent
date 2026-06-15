@@ -132,3 +132,20 @@ class GitHubAgent:
                 print("Agent is functioning within acceptable resource limits.")
         except Exception as e:
             print(f"Error validating agent status: {str(e)}")
+
+    def check_for_updates(self):
+        try:
+            import requests
+            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
+            if response.status_code == 200:
+                latest_release = response.json()
+                current_version = "1.0"  # Replace with your current version
+                if latest_release["tag_name"] != current_version:
+                    print("Update available. Downloading latest release...")
+                    # Download and install the latest release
+                else:
+                    print("Agent is up-to-date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
