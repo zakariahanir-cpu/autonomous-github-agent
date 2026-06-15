@@ -4,142 +4,71 @@ import json
 import subprocess
 
 class GitHubAgent:
-  
     def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
-      
         self.api_key = api_key
-      
         self.model = model
-      
         self.endpoint = endpoint or "https://api.groq.com/openai/v1/chat/completions"
-      
-
 
     def query(self, prompt, system_prompt="You are an autonomous self-improving GitHub Agent."):
-      
         headers = {
-          
             "Authorization": f"Bearer {self.api_key}",
-          
             "Content-Type": "application/json"
-          
         }
-      
         data = {
-          
             "model": self.model,
-          
             "messages": [
-              
                 {"role": "system", "content": system_prompt},
-              
                 {"role": "user", "content": prompt}
-              
             ],
-          
-            "temperature": 0.5
-          
+            "temperature": 0.2 # تقليل العشوائية لضمان الالتزام بالتنسيق
         }
-      
         try:
-          
             response = requests.post(self.endpoint, headers=headers, json=data)
-          
-            response.raise_for_status()
-          
+            if response.status_code != 200:
+                return f"Error: {response.status_code} {response.reason} - {response.text}"
             return response.json()['choices'][0]['message']['content']
-          
         except Exception as e:
-          
             return f"Error: {str(e)}"
-          
-
 
     def read_file(self, path):
-      
         try:
-          
             with open(path, 'r', encoding='utf-8') as f:
-              
                 return f.read()
-              
         except Exception as e:
-          
             return f"Error reading file: {str(e)}"
-          
-
 
     def write_file(self, path, content):
-      
         try:
-          
             with open(path, 'w', encoding='utf-8') as f:
-              
                 f.write(content)
-              
             return f"File {path} written successfully."
-          
         except Exception as e:
-          
             return f"Error writing file: {str(e)}"
-          
-
 
     def execute_command(self, command):
-      
         try:
-          
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
-          
             return {
-              
                 "stdout": result.stdout,
-              
                 "stderr": result.stderr,
-              
                 "returncode": result.returncode
-              
             }
-          
         except Exception as e:
-          
             return {"error": str(e)}
-          
-
 
     def self_improve(self, new_code, file_path='main.py'):
-      
         self.write_file(file_path, new_code)
-      
-
 
         commands = [
-          
             'git config --global user.name "GitHub Agent"',
-          
             'git config --global user.email "agent@github.com"',
-          
             f'git add {file_path}',
-          
-            'git commit -m "Self-improvement: Agent updated its own code via Groq Llama 3 70B"',
-          
+            'git commit -m "Self-improvement: Agent updated its own code via Groq LLM"',
             'git push'
-          
         ]
-      
 
-
-        results = []
-      
         for cmd in commands:
-          
-            result = self.execute_command(cmd)
-            if result.get("returncode") != 0:
-                print(f"Error executing command: {cmd}. Return code: {result.get('returncode')}. Stderr: {result.get('stderr')}")
-                break
-            results.append(result)
-          
-        if all(result.get("returncode") == 0 for result in results):
-            print("Self-improvement successful.")
-        else:
-            print("Self-improvement failed.")
+            res = self.execute_command(cmd)
+            if res.get('returncode') != 0:
+                print(f"Command failed: {cmd}\nError: {res.get('stderr') or res.get('error')}")
+              
