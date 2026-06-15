@@ -157,3 +157,13 @@ class GitHubAgent:
             time.sleep(3600)
             return self.query(response)
         return response
+
+    def retry_query(self, prompt, max_retries=3):
+        retries = 0
+        while retries < max_retries:
+            response = self.query(prompt)
+            if self.validate_response(response):
+                return response
+            retries += 1
+            print(f"Query failed. Retrying... ({retries}/{max_retries})")
+        return None
