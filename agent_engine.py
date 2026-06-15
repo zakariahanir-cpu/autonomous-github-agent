@@ -242,3 +242,10 @@ class GitHubAgent:
                 print("Agent is functioning within acceptable resource limits.")
         except Exception as e:
             print(f"Error validating agent status: {str(e)}")
+
+    def remove_unused_functions(self):
+        # Remove unused functions to improve performance
+        unused_functions = ['get_latest_commit', 'handle_error', 'verify_config', 'improve_performance', 'check_for_updates', 'query_with_timeout', 'query_with_retry', 'log_self_improvement', 'validate_api_key', 'error_handling', 'validate_response', 'validate_agent_status']
+        for func in unused_functions:
+            if hasattr(self, func):
+                delattr(self, func)
