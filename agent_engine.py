@@ -325,3 +325,45 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating API key: {str(e)}")
             return False
+
+    def improved_check_for_updates(self):
+        try:
+            import requests
+            response = requests.get("https://api.github.com/repos/your-repo/your-repo/releases/latest")
+            if response.status_code == 200:
+                latest_release = response.json()
+                current_version = "1.0"  # Replace with your current version
+                if latest_release["tag_name"] != current_version:
+                    print("Update available. Downloading latest release...")
+                    # Download and install the latest release
+                    self.download_and_install_latest_release(latest_release)
+                else:
+                    print("Agent is up-to-date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
+
+    def download_and_install_latest_release(self, latest_release):
+        try:
+            import requests
+            release_url = latest_release["zipball_url"]
+            response = requests.get(release_url)
+            if response.status_code == 200:
+                with open("latest_release.zip", "wb") as f:
+                    f.write(response.content)
+                print("Latest release downloaded successfully.")
+                self.install_latest_release("latest_release.zip")
+            else:
+                print("Error downloading latest release.")
+        except Exception as e:
+            print(f"Error downloading latest release: {str(e)}")
+
+    def install_latest_release(self, zip_file):
+        try:
+            import zipfile
+            with zipfile.ZipFile(zip_file, "r") as zip_ref:
+                zip_ref.extractall()
+            print("Latest release installed successfully.")
+        except Exception as e:
+            print(f"Error installing latest release: {str(e)}")
