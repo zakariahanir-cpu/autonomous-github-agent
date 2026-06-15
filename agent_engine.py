@@ -199,4 +199,15 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error getting agent status: {str(e)}")
             return None
-            
+
+    def validate_agent_code(self):
+        try:
+            import ast
+            with open('main.py', 'r') as f:
+                code = f.read()
+            ast.parse(code)
+            print("Agent code is valid.")
+        except SyntaxError as e:
+            print(f"Error in agent code: {str(e)}")
+            return False
+        return True
