@@ -120,7 +120,7 @@ class GitHubAgent:
         # Added a new feature to send a notification after self-improvement
         try:
             import requests
-            notification_url = "https://api.example.com/notifications"
+            notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/"
             notification_data = {
                 "event": "self-improvement",
                 "status": "success"
