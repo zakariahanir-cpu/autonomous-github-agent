@@ -10,8 +10,9 @@ def main():
         print("Error: LLM_API_KEY not found. Please add it to GitHub Secrets.")
         return
 
-    # تهيئة الوكيل
-    agent = GitHubAgent(api_key=api_key, model="llama3-70b-8192")
+    # استخدام نموذج أحدث وأكثر استقراراً
+    # النماذج الموصى بها: llama-3.3-70b-versatile أو llama-3.1-70b-versatile
+    agent = GitHubAgent(api_key=api_key, model="llama-3.3-70b-versatile")
     print("--- GitHub Autonomous Agent Started ---")
 
     # قراءة الكود الحالي
@@ -53,13 +54,16 @@ OR
 Do not provide explanations outside the code block.
 """
 
-    print("Consulting Llama 3 70B via Groq...")
+    print(f"Consulting {agent.model} via Groq...")
     response = agent.query(prompt)
 
-    # معالجة الاستجابة باستخدام التعبيرات النمطية (Regex) لضمان المرونة
+    # معالجة الاستجابة
     if response:
+        if response.startswith("Error:"):
+            print(f"AI Provider returned an error: {response}")
+            return
+
         # البحث عن أي كتلة برمجية تبدأ بـ main.py أو agent_engine.py
-        # يدعم التنسيقات: ```python main.py أو ```main.py أو ```python\nmain.py
         match = re.search(r"```(?:python|)\s*(main\.py|agent_engine\.py)\s*\n(.*?)\n```", response, re.DOTALL | re.IGNORECASE)
         
         if match:
@@ -68,19 +72,16 @@ Do not provide explanations outside the code block.
             
             if filename in ['main.py', 'agent_engine.py']:
                 print(f"Applying improvement to {filename}...")
-                result = agent.self_improve(new_code, filename)
-                print(f"Status: {result if result else 'Success'}")
+                agent.self_improve(new_code, filename)
             else:
                 print(f"AI suggested an invalid filename: {filename}")
         else:
-            # محاولة بديلة إذا لم يلتزم النموذج بالتنسيق الصارم ولكن وضع الكود في علامات اقتباس
             if "```" in response:
                 print("Response format was slightly off, attempting manual extraction...")
                 parts = response.split("```")
                 content = parts[1].strip()
                 lines = content.split("\n")
                 
-                # التحقق من السطر الأول أو محتوى الكود لتحديد الملف
                 first_line = lines[0].lower()
                 if "agent_engine" in first_line or "class githubagent" in content.lower():
                     filename = "agent_engine.py"
@@ -93,7 +94,6 @@ Do not provide explanations outside the code block.
                 agent.self_improve(new_code.strip(), filename)
             else:
                 print("No valid code block found in the AI response.")
-                print(f"Raw Response snippet: {response[:100]}...")
     else:
         print("No response received from the AI.")
 
@@ -101,4 +101,4 @@ Do not provide explanations outside the code block.
 
 if __name__ == "__main__":
     main()
-          
+    
