@@ -1,16 +1,11 @@
 import os
-
 import requests
-
 import json
-
 import subprocess
-
-
 
 class GitHubAgent:
   
-    def __init__(self, api_key, model="llama3-70b-8192", endpoint=None):
+    def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
       
         self.api_key = api_key
       
@@ -138,64 +133,13 @@ class GitHubAgent:
       
         for cmd in commands:
           
-            results.append(self.execute_command(cmd))
+            result = self.execute_command(cmd)
+            if result.get("returncode") != 0:
+                print(f"Error executing command: {cmd}. Return code: {result.get('returncode')}. Stderr: {result.get('stderr')}")
+                break
+            results.append(result)
           
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if all(result.get("returncode") == 0 for result in results):
+            print("Self-improvement successful.")
+        else:
+            print("Self-improvement failed.")
