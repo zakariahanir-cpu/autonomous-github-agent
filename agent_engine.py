@@ -102,76 +102,6 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error verifying self-improvement: {str(e)}")
 
-        try:
-            import sys
-            if sys.argv[0] == 'main.py':
-                print("Agent is running in the main process. No need to restart.")
-            else:
-                print("Agent is running in a subprocess. Restarting the main process.")
-                import os
-                os.execl(sys.executable, sys.executable, *sys.argv)
-        except Exception as e:
-            print(f"Error handling agent restart: {str(e)}")
-
-        try:
-            import requests
-            notification_url = "https://gullsatin-jawrid--96637.stormkit.dev/api/notifications"
-            notification_data = {
-                "event": "self-improvement",
-                "status": "success"
-            }
-            response = requests.post(notification_url, json=notification_data)
-            if response.status_code == 200:
-                print("Notification sent successfully.")
-            else:
-                print("Error sending notification.")
-        except Exception as e:
-            print(f"Error sending notification: {str(e)}")
-
-        try:
-            logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
-            logging.info('Self-improvement process started')
-            logging.info('New code written to file')
-            logging.info('Git commands executed')
-            logging.info('Agent restarted')
-            logging.info('Notification sent')
-            logging.info('Self-improvement process completed')
-        except Exception as e:
-            print(f"Error logging self-improvement process: {str(e)}")
-
-        try:
-            logging.info('Self-improvement process completed successfully')
-        except Exception as e:
-            print(f"Error logging self-improvement completion: {str(e)}")
-
-        try:
-            import subprocess
-            git_status = subprocess.run(['git', 'status'], capture_output=True, text=True)
-            if git_status.returncode == 0:
-                print("Git status is clean.")
-            else:
-                print("Git status is not clean.")
-        except Exception as e:
-            print(f"Error checking git status: {str(e)}")
-
-        try:
-            import requests
-            update_url = "https://api.github.com/repos/your-repo/your-repo/commits"
-            response = requests.get(update_url)
-            if response.status_code == 200:
-                commits = response.json()
-                latest_commit = commits[0]
-                if latest_commit['sha'] != self.get_latest_commit():
-                    print("New update available. Restarting the agent.")
-                    import os
-                    os.execl(sys.executable, sys.executable, *sys.argv)
-                else:
-                    print("Agent is up to date.")
-            else:
-                print("Error checking for updates.")
-        except Exception as e:
-            print(f"Error checking for updates: {str(e)}")
-
     def get_latest_commit(self):
         try:
             import subprocess
@@ -259,3 +189,14 @@ class GitHubAgent:
                 time.sleep(retry_delay)
         print("All query attempts failed. Giving up.")
         return None
+
+    def log_self_improvement(self):
+        try:
+            logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
+            logging.info('Self-improvement process started')
+            logging.info('New code written to file')
+            logging.info('Git commands executed')
+            logging.info('Agent restarted')
+            logging.info('Self-improvement process completed')
+        except Exception as e:
+            print(f"Error logging self-improvement process: {str(e)}")
