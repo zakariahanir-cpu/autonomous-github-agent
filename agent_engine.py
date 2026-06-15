@@ -75,3 +75,11 @@ class GitHubAgent:
                 print(f"Command executed successfully: {cmd}")
                 if 'stdout' in res:
                     print(f"Output: {res['stdout']}")
+
+        # Add a try-except block to handle potential exceptions during the self-improvement process
+        try:
+            # Reload the agent's code after self-improvement
+            import importlib
+            importlib.reload(sys.modules[__name__])
+        except Exception as e:
+            print(f"Error reloading agent's code: {str(e)}")
