@@ -264,3 +264,14 @@ class GitHubAgent:
             return None
         finally:
             signal.alarm(0)
+
+    # Added a new method to implement a retry mechanism for the query method
+    def query_with_retry(self, prompt, max_retries=3, retry_delay=1):
+        for attempt in range(max_retries):
+            try:
+                return self.query(prompt)
+            except Exception as e:
+                print(f"Error during query attempt {attempt+1}: {str(e)}")
+                time.sleep(retry_delay)
+        print("All query attempts failed. Giving up.")
+        return None
