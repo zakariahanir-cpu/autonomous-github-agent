@@ -162,3 +162,34 @@ class GitHubAgent:
                 print("Git status is not clean.")
         except Exception as e:
             print(f"Error checking git status: {str(e)}")
+
+        # Added a new feature to check for updates and restart the agent if necessary
+        try:
+            import requests
+            update_url = "https://api.github.com/repos/your-repo/your-repo/commits"
+            response = requests.get(update_url)
+            if response.status_code == 200:
+                commits = response.json()
+                latest_commit = commits[0]
+                if latest_commit['sha'] != self.get_latest_commit():
+                    print("New update available. Restarting the agent.")
+                    import os
+                    os.execl(sys.executable, sys.executable, *sys.argv)
+                else:
+                    print("Agent is up to date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
+
+    def get_latest_commit(self):
+        try:
+            import subprocess
+            latest_commit = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
+            if latest_commit.returncode == 0:
+                return latest_commit.stdout.strip()
+            else:
+                return None
+        except Exception as e:
+            print(f"Error getting latest commit: {str(e)}")
+            return None
