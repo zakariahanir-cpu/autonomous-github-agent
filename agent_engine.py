@@ -229,3 +229,23 @@ class GitHubAgent:
                 print("Memory usage is within acceptable limits.")
         except Exception as e:
             print(f"Error improving performance: {str(e)}")
+
+    # Added a new method to check for updates and restart the agent if necessary
+    def check_for_updates(self):
+        try:
+            import requests
+            update_url = "https://api.github.com/repos/your-repo/your-repo/commits"
+            response = requests.get(update_url)
+            if response.status_code == 200:
+                commits = response.json()
+                latest_commit = commits[0]
+                if latest_commit['sha'] != self.get_latest_commit():
+                    print("New update available. Restarting the agent.")
+                    import os
+                    os.execl(sys.executable, sys.executable, *sys.argv)
+                else:
+                    print("Agent is up to date.")
+            else:
+                print("Error checking for updates.")
+        except Exception as e:
+            print(f"Error checking for updates: {str(e)}")
