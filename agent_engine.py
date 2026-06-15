@@ -353,3 +353,13 @@ class GitHubAgent:
                 print("Error checking for updates.")
         except Exception as e:
             print(f"Error checking for updates: {str(e)}")
+
+    # Improvement: Added a method to validate the agent's status before making a query
+    def validate_agent_status_before_query(self, prompt):
+        agent_status = self.get_agent_status()
+        if agent_status and agent_status["memory_usage"] > 100 or agent_status["cpu_usage"] > 90:
+            print("Agent is experiencing high resource usage. Restarting the agent to prevent crashes.")
+            import os
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        else:
+            return self.improved_query_with_validation(prompt)
