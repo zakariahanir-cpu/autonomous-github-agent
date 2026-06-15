@@ -133,7 +133,7 @@ class GitHubAgent:
         try:
             update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
             # أضفنا الـ headers لتفادي حظر API من GitHub بدون طلب مصادق
-            headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"} 
+            headers = {"User-Agent": "GitHub-Agent"} 
             response = requests.get(update_url, headers=headers, timeout=5)
             if response.status_code == 200:
                 update_data = response.json()
@@ -161,20 +161,4 @@ class GitHubAgent:
             os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Critical Error restarting agent: {str(e)}")
-
-        # Added a new feature: checking for updates before restarting
-        if should_restart_for_update:
-            try:
-                print("Updating agent code from remote repository...")
-                update_url = "https://api.github.com/repos/your-repo/your-repo/contents/agent_engine.py"
-                headers = {"User-Agent": "GitHub-Agent", "Authorization": f"Bearer {self.api_key}"}
-                response = requests.get(update_url, headers=headers, timeout=5)
-                if response.status_code == 200:
-                    update_data = response.json()
-                    new_code = update_data.get('content')
-                    self.write_file('agent_engine.py', new_code)
-                    print("Agent code updated successfully.")
-                else:
-                    print("Error updating agent code.")
-            except Exception as e:
-                print(f"Error updating agent code: {str(e)}")
+            
