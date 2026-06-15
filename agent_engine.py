@@ -199,4 +199,14 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error getting agent status: {str(e)}")
             return None
-                      
+
+    def validate_file_path(self, file_path):
+        try:
+            import os
+            if os.path.exists(file_path):
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"Error validating file path: {str(e)}")
+            return False
