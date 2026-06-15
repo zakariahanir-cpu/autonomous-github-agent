@@ -1,4 +1,4 @@
-import os
+Import os
 import requests
 import json
 import subprocess
@@ -167,33 +167,3 @@ class GitHubAgent:
             retries += 1
             print(f"Query failed. Retrying... ({retries}/{max_retries})")
         return None
-
-    def exponential_backoff(self, prompt, max_retries=5, initial_delay=1):
-        delay = initial_delay
-        for attempt in range(max_retries):
-            response = self.query(prompt)
-            if self.validate_response(response):
-                return response
-            else:
-                print(f"Query failed. Retrying in {delay} seconds... (Attempt {attempt+1}/{max_retries})")
-                time.sleep(delay)
-                delay *= 2
-        return None
-
-    def improve_code(self):
-        prompt = f"""
-You are an autonomous self-improving GitHub Agent. 
-Your goal is to improve your own source code.
-
-CURRENT MAIN CODE (main.py):
-{self.read_file('main.py')}
-
-CURRENT ENGINE CODE (agent_engine.py):
-{self.read_file('agent_engine.py')}
-
-TASK:
-1. Identify ONE specific logic improvement, bug fix, or feature enhancement.
-2. Provide the FULL updated code for the file you chose to improve.
-
-RESPONSE FORMAT:
-You MUST start your response with the filename in a code block, like this:
