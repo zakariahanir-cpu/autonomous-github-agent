@@ -3,6 +3,8 @@ import requests
 import json
 import subprocess
 import sys
+import importlib
+import time
 
 class GitHubAgent:
     def __init__(self, api_key, model="llama-3.3-70b-versatile", endpoint=None):
@@ -80,7 +82,6 @@ class GitHubAgent:
         # Add a try-except block to handle potential exceptions during the self-improvement process
         try:
             # Reload the agent's code after self-improvement
-            import importlib
             importlib.reload(sys.modules[__name__])
         except Exception as e:
             print(f"Error reloading agent's code: {str(e)}")
@@ -94,7 +95,6 @@ class GitHubAgent:
 
         # Added a check to verify if the self-improvement was successful
         try:
-            import time
             time.sleep(5)  # wait for 5 seconds to allow the changes to take effect
             import requests
             response = requests.get('https://api.github.com')
@@ -104,3 +104,15 @@ class GitHubAgent:
                 print("Self-improvement failed. Agent is not functioning correctly.")
         except Exception as e:
             print(f"Error verifying self-improvement: {str(e)}")
+
+        # Added a check to handle the case where the agent is not able to restart itself
+        try:
+            import sys
+            if sys.argv[0] == 'main.py':
+                print("Agent is running in the main process. No need to restart.")
+            else:
+                print("Agent is running in a subprocess. Restarting the main process.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+        except Exception as e:
+            print(f"Error handling agent restart: {str(e)}")
