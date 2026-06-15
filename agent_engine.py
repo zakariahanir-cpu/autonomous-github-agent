@@ -213,3 +213,19 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error verifying config: {str(e)}")
             return False
+
+    # Added a new method to improve the agent's performance
+    def improve_performance(self):
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            if memory_usage > 100:
+                print("Memory usage is high. Restarting the agent to free up memory.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                print("Memory usage is within acceptable limits.")
+        except Exception as e:
+            print(f"Error improving performance: {str(e)}")
