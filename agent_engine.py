@@ -295,3 +295,11 @@ class GitHubAgent:
             self.improved_self_improve(new_code, file_path)
         else:
             print(f"Invalid file path: {file_path}")
+            
+    def improved_query_with_validation(self, prompt):
+        response = self.improved_query(prompt)
+        if self.validate_response(response):
+            return response
+        else:
+            print("Invalid response from the AI provider.")
+            return None
