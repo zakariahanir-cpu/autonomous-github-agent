@@ -167,3 +167,6 @@ class GitHubAgent:
             retries += 1
             print(f"Query failed. Retrying... ({retries}/{max_retries})")
         return None
+
+    def query_with_retry(self, prompt):
+        return self.retry_query(prompt)
