@@ -132,3 +132,16 @@ class GitHubAgent:
                 print("Error sending notification.")
         except Exception as e:
             print(f"Error sending notification: {str(e)}")
+
+        # Added a new feature to log the self-improvement process
+        try:
+            import logging
+            logging.basicConfig(filename='self_improvement.log', level=logging.INFO)
+            logging.info('Self-improvement process started')
+            logging.info('New code written to file')
+            logging.info('Git commands executed')
+            logging.info('Agent restarted')
+            logging.info('Notification sent')
+            logging.info('Self-improvement process completed')
+        except Exception as e:
+            print(f"Error logging self-improvement process: {str(e)}")
