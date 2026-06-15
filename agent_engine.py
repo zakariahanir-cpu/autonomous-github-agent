@@ -210,3 +210,22 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating file path: {str(e)}")
             return False
+
+    def improve_code(self):
+        # Added a new method to improve the agent's code
+        prompt = f"""
+You are an autonomous self-improving GitHub Agent. 
+Your goal is to improve your own source code.
+
+CURRENT MAIN CODE (main.py):
+{self.read_file('main.py')}
+
+CURRENT ENGINE CODE (agent_engine.py):
+{self.read_file('agent_engine.py')}
+
+TASK:
+1. Identify ONE specific logic improvement, bug fix, or feature enhancement.
+2. Provide the FULL updated code for the file you chose to improve.
+
+RESPONSE FORMAT:
+You MUST start your response with the filename in a code block, like this:
