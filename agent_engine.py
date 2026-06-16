@@ -388,3 +388,28 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating agent status: {str(e)}")
             return None
+
+    def improved_rate_limit_protection(self):
+        import time
+        while True:
+            response = self.query("Test query to check rate limit")
+            if 'rate limit' in str(response).lower():
+                print("Rate limit exceeded. Waiting for 1 hour before retrying...")
+                time.sleep(3600)
+            else:
+                break
+
+    def improved_get_agent_status(self):
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            return {
+                "memory_usage": memory_usage,
+                "cpu_usage": cpu_usage
+            }
+        except Exception as e:
+            print(f"Error getting agent status: {str(e)}")
+            return None
