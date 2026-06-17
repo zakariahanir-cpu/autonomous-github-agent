@@ -413,3 +413,11 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error getting agent status: {str(e)}")
             return None
+
+    # Added a new method to handle agent shutdown
+    def shutdown_agent(self):
+        try:
+            import os
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        except Exception as e:
+            print(f"Error shutting down agent: {str(e)}")
