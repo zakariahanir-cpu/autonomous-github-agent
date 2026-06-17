@@ -421,3 +421,20 @@ class GitHubAgent:
             os.execl(sys.executable, sys.executable, *sys.argv)
         except Exception as e:
             print(f"Error shutting down agent: {str(e)}")
+
+    # Added a new method to improve the agent's self-improvement process
+    def improved_self_improvement_process(self):
+        try:
+            import os
+            import psutil
+            process = psutil.Process(os.getpid())
+            memory_usage = process.memory_info().rss / (1024 * 1024)
+            cpu_usage = process.cpu_percent()
+            if memory_usage > 100 or cpu_usage > 90:
+                print("Agent is experiencing high resource usage. Restarting the agent to prevent crashes.")
+                import os
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                print("Agent is functioning within acceptable resource limits.")
+        except Exception as e:
+            print(f"Error checking agent status: {str(e)}")
