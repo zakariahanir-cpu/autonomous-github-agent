@@ -451,3 +451,16 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error in improved query with validation: {str(e)}")
             return None
+
+    # Improved the validate_api_key method to handle exceptions
+    def improved_validate_api_key(self, api_key):
+        try:
+            response = requests.get(f"https://api.groq.com/openai/v1/chat/completions", headers={"Authorization": f"Bearer {api_key}"})
+            if response.status_code == 200:
+                return True
+            else:
+                print(f"API key validation failed: {response.status_code} {response.reason}")
+                return False
+        except Exception as e:
+            print(f"Error validating API key: {str(e)}")
+            return False
