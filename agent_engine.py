@@ -464,3 +464,14 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error validating API key: {str(e)}")
             return False
+
+    def improved_query(self, prompt):
+        try:
+            response = self.query_with_retry(prompt)
+            if response:
+                return response
+            else:
+                return self.query_with_exponential_backoff(prompt)
+        except Exception as e:
+            print(f"Error in improved query: {str(e)}")
+            return None
