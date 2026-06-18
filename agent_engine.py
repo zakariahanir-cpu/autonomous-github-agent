@@ -298,11 +298,15 @@ class GitHubAgent:
             print(f"Invalid file path: {file_path}")
             
     def improved_query_with_validation(self, prompt):
-        response = self.improved_query(prompt)
-        if self.validate_response(response):
-            return response
-        else:
-            print(f"Invalid response from the AI provider: {response}")
+        try:
+            response = self.improved_query(prompt)
+            if self.validate_response(response):
+                return response
+            else:
+                print(f"Invalid response from the AI provider: {response}")
+                return None
+        except Exception as e:
+            print(f"Error in improved query with validation: {str(e)}")
             return None
 
     def improved_error_handling(self):
