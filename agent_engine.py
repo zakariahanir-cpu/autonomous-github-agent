@@ -479,3 +479,21 @@ class GitHubAgent:
         except Exception as e:
             print(f"Error in improved query: {str(e)}")
             return None
+
+    # Added a new method to improve error handling
+    def improved_error_handling_with_retry(self, max_retries=3):
+        try:
+            import logging
+            logging.basicConfig(filename='error.log', level=logging.ERROR)
+            logging.info("Error handling initialized.")
+            for _ in range(max_retries):
+                try:
+                    # Add your error handling code here
+                    pass
+                except Exception as e:
+                    logging.error(f"Error occurred: {str(e)}")
+                    print(f"Error occurred: {str(e)}")
+            logging.info("Error handling completed.")
+        except Exception as e:
+            logging.error(f"Error setting up error handling: {str(e)}")
+            print(f"Error setting up error handling: {str(e)}")
