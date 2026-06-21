@@ -497,3 +497,9 @@ class GitHubAgent:
         except Exception as e:
             logging.error(f"Error setting up error handling: {str(e)}")
             print(f"Error setting up error handling: {str(e)}")
+
+    def validate_file_path_and_improve(self, file_path, new_code):
+        if self.validate_file_path(file_path):
+            self.improved_self_improve_with_validation(new_code, file_path)
+        else:
+            print(f"Invalid file path: {file_path}")
